@@ -17,125 +17,156 @@
   07. PORTFOLIO FILTER IMAGE
   08. TESTIMONIAL SLIDER
   09. ANIMATION EFFECT
+  10. EmailJS
 */
 
 
 (function ($) {
-	'use strict';
+  'use strict';
 
-	jQuery(document).ready(function () {
-
-
-		/* XX. PRELOADER
-		==================================================*/
-
-		$(window).on('load', function () {
-			$("#status").fadeOut();
-			$("#preloader").delay(500).fadeOut("slow");
-		});
+  jQuery(document).ready(function () {
 
 
-		/* 01. NAVIGATION
-		==================================================*/
+    /* XX. PRELOADER
+    ==================================================*/
 
-		$(window).on('scroll', function () {
-			if ($(window).scrollTop() > 100) {
-				$('#navigation').addClass('nav-bg');
-			} else {
-				$('#navigation').removeClass('nav-bg');
-			}
-		});
+    $(window).on('load', function () {
+      $("#status").fadeOut();
+      $("#preloader").delay(500).fadeOut("slow");
+    });
 
 
-		/* 02. MOBILE NAVIGATION
-		==================================================*/
+    /* 01. NAVIGATION
+    ==================================================*/
 
-		$(document).on('click', '.navbar-collapse.in', function (e) {
-			if ($(e.target).is('a') && $(e.target).attr('class') != 'dropdown-toggle') {
-				$(this).collapse('hide');
-			}
-		});
-
-		$('body').scrollspy({
-			target: '.navbar-collapse',
-			offset: 195
-		});
+    $(window).on('scroll', function () {
+      if ($(window).scrollTop() > 100) {
+        $('#navigation').addClass('nav-bg');
+      } else {
+        $('#navigation').removeClass('nav-bg');
+      }
+    });
 
 
-		/* 03. PARALLAX BACKGROUND EFFECT
-		==================================================*/
+    /* 02. MOBILE NAVIGATION
+    ==================================================*/
 
-		var parallax = function () {
-			$(window).stellar();
-		};
+    $(document).on('click', '.navbar-collapse.in', function (e) {
+      if ($(e.target).is('a') && $(e.target).attr('class') != 'dropdown-toggle') {
+        $(this).collapse('hide');
+      }
+    });
 
-		$(function () {
-			parallax();
-		});
-
-
-		/* 04. TEXT ROTATE
-		==================================================*/
-		$(document).on('ready', function () {
-			$('#text-rotator').rotatetext({
-				fadeSpeed: 500,
-				pauseSpeed: 2000
-			});
-		});
+    $('body').scrollspy({
+      target: '.navbar-collapse',
+      offset: 195
+    });
 
 
-		/* 05. HOME ARROW DOWN
-		==================================================*/
+    /* 03. PARALLAX BACKGROUND EFFECT
+    ==================================================*/
 
-		var arrowBounce = function () {
-			var arrow = $(".arrow");
-			if (arrow.hasClass("lift")) {
-				arrow.removeClass("lift");
-			} else {
-				arrow.addClass("lift");
-			}
-		};
+    var parallax = function () {
+      $(window).stellar();
+    };
 
-		setInterval(arrowBounce, 800);
+    $(function () {
+      parallax();
+    });
 
 
-		/* 06. SMOTH SCROLL
-		==================================================*/
-
-		$('a.smoth-scroll').on('click', function (e) {
-			var anchor = $(this);
-			$('html, body').stop().animate({
-				scrollTop: $(anchor.attr('href')).offset().top - 50
-			}, 1000);
-			e.preventDefault();
-		});
+    /* 04. TEXT ROTATE
+    ==================================================*/
+    $(document).on('ready', function () {
+      $('#text-rotator').rotatetext({
+        fadeSpeed: 500,
+        pauseSpeed: 2000
+      });
+    });
 
 
-		/* 07. PORTFOLIO FILTER IMAGE
-		==================================================*/
-		$('#port-image').mixItUp();
+    /* 05. HOME ARROW DOWN
+    ==================================================*/
+
+    var arrowBounce = function () {
+      var arrow = $(".arrow");
+      if (arrow.hasClass("lift")) {
+        arrow.removeClass("lift");
+      } else {
+        arrow.addClass("lift");
+      }
+    };
+
+    setInterval(arrowBounce, 800);
 
 
-		/* 08. TESTIMONIAL SLIDER
-		==================================================*/
+    /* 06. SMOTH SCROLL
+    ==================================================*/
 
-		$('.flexslider').flexslider({
-			animation: "fade",
-			directionNav: false
-		});
-
-
-		/* 09. ANIMATION EFFECT
-		==================================================*/
-
-		AOS.init({
-			duration: 1200,
-			once: true,
-			disable: 'mobile'
-		});
+    $('a.smoth-scroll').on('click', function (e) {
+      var anchor = $(this);
+      $('html, body').stop().animate({
+        scrollTop: $(anchor.attr('href')).offset().top - 50
+      }, 1000);
+      e.preventDefault();
+    });
 
 
+    /* 07. PORTFOLIO FILTER IMAGE
+    ==================================================*/
+    $('#port-image').mixItUp();
 
-	});
+
+    /* 08. TESTIMONIAL SLIDER
+    ==================================================*/
+
+    $('.flexslider').flexslider({
+      animation: "fade",
+      directionNav: false
+    });
+
+
+    /* 09. ANIMATION EFFECT
+    ==================================================*/
+
+    AOS.init({
+      duration: 1200,
+      once: true,
+      disable: 'mobile'
+    });
+
+
+
+    window.onload = function () {
+      document.getElementById('contact-form').addEventListener('submit', function (event) {
+        event.preventDefault();
+        const formMessages = $('#form-messages');
+        emailjs.sendForm('service_m710cqf', 'template_xkdsfhi', this)
+          .then(function () {
+            $(formMessages).removeClass('error');
+            $(formMessages).addClass('success');
+            $(formMessages).text('Thank You! Your message has been sent.');
+
+            $('#name').val('');
+            $('#email').val('');
+            $('#message').val('');
+
+            setTimeout(function(){
+              $(formMessages).removeClass('success');
+              $(formMessages).text('');
+            }, 3000);
+          }, function (error) {
+            $(formMessages).removeClass('success');
+            $(formMessages).addClass('error');
+            $(formMessages).text('Oops! An error occured and your message could not be sent.');
+            setTimeout(function(){
+              $(formMessages).removeClass('error');
+              $(formMessages).text('');
+            }, 3000);
+            console.log('EmailJS failed:', error);
+          });
+      });
+    }
+  });
 
 })(jQuery);
